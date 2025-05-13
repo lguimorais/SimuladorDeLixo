@@ -1,20 +1,24 @@
 package Modelo;
+
+import java.util.Random;
+
 public class Zona {
   private String nome;
-  private double intervaloMin;
-  private double intervaloMax;
-  private boolean horarioDePico;
-  private double quantidadeLixoGerada;
-  private double capacidadeLixoMax;
+  private double lixoMin;
+  private double lixoMax;
+  private Random random = new Random();
 
-  public Zona(String nome, double intervaloMin, double intervaloMax, boolean horarioDePico,
-      double quantidadeLixoGerada, double capacidadeLixoMax) {
+  public Zona(String nome, double lixoMin, double lixoMax) {
     this.nome = nome;
-    this.intervaloMin = intervaloMin;
-    this.intervaloMax = intervaloMax;
-    this.horarioDePico = horarioDePico;
-    this.quantidadeLixoGerada = quantidadeLixoGerada;
-    this.capacidadeLixoMax = capacidadeLixoMax;
+    this.lixoMin = lixoMin;
+    this.lixoMax = lixoMax;
   }
 
+  public double gerarLixo() {
+    return lixoMin + (lixoMax - lixoMin) * random.nextDouble();
+  }
+
+  public String getNome() {
+    return nome;
+  }
 }

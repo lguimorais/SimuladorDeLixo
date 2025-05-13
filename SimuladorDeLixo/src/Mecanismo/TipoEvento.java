@@ -1,4 +1,9 @@
 package Mecanismo;
-public class TipoEvento {
 
+public enum TipoEvento {
+  GERAR_LIXO,
+  CAMINHAO_ENCHEU,
+  CAMINHAO_CHEGOU_ESTACAO,
+  TEMPO_ESPERA_EXCEDIDO,
+  CAMINHAO_PARTE_ATERRO
 }

@@ -1,5 +1,7 @@
 package EstruturasDeDados;
 
+import java.util.Comparator;
+
 public class Lista<T> {
   private No<T> head; // primeiro
   private No<T> tail; // ultimo
@@ -35,6 +37,18 @@ public class Lista<T> {
   public void setTamanho(int tamanho) {
     this.tamanho = tamanho;
   }
+  
+  public T removerInicio() {
+    if (head == null)
+      return null;
+    T valor = head.getValor();
+    head = head.getProx();
+    if (head == null) {
+      tail = null;
+    }
+    tamanho--;
+    return valor;
+  }  
 
   public void add(T novoValor) {
 
@@ -83,6 +97,29 @@ public class Lista<T> {
       atual = atual.getProx();
     }
 
+  }
+
+  public void inserirOrdenado(T novoValor, Comparator<T> comparador) {
+    No<T> novoNo = new No<>(novoValor);
+
+    if (head == null || comparador.compare(novoValor, head.getValor()) < 0) {
+      novoNo.setProx(head);
+      head = novoNo;
+      if (tail == null) {
+        tail = novoNo;
+      }
+    } else {
+      No<T> atual = head;
+      while (atual.getProx() != null && comparador.compare(novoValor, atual.getProx().getValor()) >= 0) {
+        atual = atual.getProx();
+      }
+      novoNo.setProx(atual.getProx());
+      atual.setProx(novoNo);
+      if (novoNo.getProx() == null) {
+        tail = novoNo;
+      }
+    }
+    tamanho++;
   }
 
   public No get(int posicao) {
