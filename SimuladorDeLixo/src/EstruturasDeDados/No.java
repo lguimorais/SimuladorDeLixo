@@ -1,14 +1,17 @@
 package EstruturasDeDados;
 
+// Classe genérica para representar um nó(elemento)de uma estrutura encadeada.
 public class No<T> {
-  private T valor;
-  private No<T> prox; // proximo elemento
+  private T valor; // valor genérico armazenado.
+  private No<T> prox; // proximo elemento(Nó).
 
+  // Construtor recebe o valor inicial
   public No(T novoValor) {
     this.valor = novoValor;
     this.prox = null;
   }
 
+  // Getters e Setters para valor e próximo
   public T getValor() {
     return valor;
   }

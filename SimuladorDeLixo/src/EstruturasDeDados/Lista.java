@@ -2,16 +2,16 @@ package EstruturasDeDados;
 
 import java.util.Comparator;
 
+//lista genérica encadeada.
 public class Lista<T> {
   private No<T> head; // primeiro
   private No<T> tail; // ultimo
-  private int tamanho;
+  private int tamanho; // tamanho da lista
 
   public Lista() {
     this.tamanho = 0;
-    this.head = null;// ter ou nao o null nao faz diferenca para a execuçao do codigo
-    this.tail = null;// ter ou nao o null nao faz diferenca para a execuçao do codigo
-
+    this.head = null;
+    this.tail = null;
   }
 
   public No<T> getHead() {
@@ -37,7 +37,8 @@ public class Lista<T> {
   public void setTamanho(int tamanho) {
     this.tamanho = tamanho;
   }
-  
+
+  // remove do inicio
   public T removerInicio() {
     if (head == null)
       return null;
@@ -48,8 +49,9 @@ public class Lista<T> {
     }
     tamanho--;
     return valor;
-  }  
+  }
 
+  // adiciona ao final.
   public void add(T novoValor) {
 
     No<T> novoNo = new No<T>(novoValor);
@@ -63,6 +65,7 @@ public class Lista<T> {
     this.tamanho++;
   }
 
+  // imprime todos os valores.
   public void imprimir() {
     for (int i = 0; i < this.getTamanho(); i++) {
       System.out.println(this.get(i).getValor());
@@ -70,6 +73,7 @@ public class Lista<T> {
     }
   }
 
+  // remove nó com valor igual.
   public void remove(T valorProcurado) {
     No<T> ant = null;
     No<T> atual = this.head;
@@ -99,6 +103,7 @@ public class Lista<T> {
 
   }
 
+  // usado para manter eventos ordenados por tempo.
   public void inserirOrdenado(T novoValor, Comparator<T> comparador) {
     No<T> novoNo = new No<>(novoValor);
 
@@ -122,6 +127,7 @@ public class Lista<T> {
     tamanho++;
   }
 
+  // retorna nó na posição.
   public No get(int posicao) {
     No atual = this.head;
     for (int i = 0; i < posicao; i++) {

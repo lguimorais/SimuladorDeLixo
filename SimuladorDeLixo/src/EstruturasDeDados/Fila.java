@@ -10,11 +10,13 @@ public class Fila<T> {
     this.head = null;
     this.tail = null;
   }
-  
+
+  // verificaçao se a lista esta vazia
   public boolean estaVazia() {
     return tamanho == 0;
   }
 
+  // insere no final.
   public void add(T novoValor) {
     No<T> novoNo = new No<T>(novoValor);
     if (estaVazia()) {
@@ -26,21 +28,21 @@ public class Fila<T> {
     }
     this.tamanho++;
   }
+  // remove o primeiro da fila.
+  // public T desenfileirar() {
+  // if (estaVazia())
+  // return null;
+  // T valor = head.getValor();
+  // head = head.getProx();
+  // if (head == null) {
+  // tail = null;
+  // }
+  // tamanho--;
+  // return valor;
+  // } exemplo do GPT
+
   
-  public T desenfileirar() {
-    if (estaVazia())
-      return null;
-    T valor = head.getValor();
-    head = head.getProx();
-    if (head == null) {
-      tail = null;
-    }
-    tamanho--;
-    return valor;
-  }
-
-
-
+  // remove o primeiro da fila.
   public void remove() {
     No<T> atual = this.head;
     if (estaVazia()) {
@@ -54,6 +56,7 @@ public class Fila<T> {
 
   }
 
+  // retorna o primeiro sem remover.
   public No getPrimeiro() {
     No atual = this.head;
     return atual;
