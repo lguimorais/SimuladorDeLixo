@@ -1,11 +1,11 @@
 package EstruturasDeDados;
 
 public class NoPrioridade<T> {
-  public T dado;
+  public T valor;
   public double prioridade;
 
-  public NoPrioridade(T dado, double prioridade) {
-    this.dado = dado;
+  public NoPrioridade(T novoValor, double prioridade) {
+    this.valor = novoValor;
     this.prioridade = prioridade;
   }
 }
