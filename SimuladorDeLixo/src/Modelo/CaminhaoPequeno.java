@@ -2,11 +2,23 @@ package Modelo;
 public abstract  class CaminhaoPequeno {
   protected int capacidade;
   protected int cargaAtual;
+  protected int maxViagensPorDia;
+  protected int viagensRealizadas;
 
   public abstract boolean coletar(int quantidade);
 
   public boolean estaCheio() {
     return cargaAtual >= capacidade;
+  }
+
+  public boolean podeViajar() {
+    return viagensRealizadas < maxViagensPorDia;
+  }
+
+  public void registrarViagem() {
+
+    viagensRealizadas++;
+   
   }
 
   public int descarregar() {

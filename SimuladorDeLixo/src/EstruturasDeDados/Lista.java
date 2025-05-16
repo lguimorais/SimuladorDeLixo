@@ -146,7 +146,7 @@ public class Lista<T> {
   }
 
   // Retorna o nó na posição informada (começa em 0)
-  public No get(int posicao) {
+  public No<T> get(int posicao) {
     No atual = this.head;
 
     for (int i = 0; i < posicao; i++) {

@@ -43,17 +43,17 @@ public class Fila<T> {
 
   
   // remove o primeiro da fila.
-  public void remove() {
-    No<T> atual = this.head;
+  public T remove() {
     if (estaVazia()) {
-      return;
-    } else if (atual == head) {
-      this.head = atual.getProx();
-      atual.setProx(null);
-      tamanho--;
-      return;
+      return null;
     }
-
+    T valor = head.getValor();
+    head = head.getProx();
+    if (head == null) {
+      tail = null;
+    }
+    tamanho--;
+    return valor;
   }
 
   // retorna o primeiro sem remover.

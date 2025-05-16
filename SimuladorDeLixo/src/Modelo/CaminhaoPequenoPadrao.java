@@ -10,8 +10,10 @@ public class CaminhaoPequenoPadrao extends CaminhaoPequeno {
 
     @Override
     public boolean coletar(int quantidade) {
+      
         if (cargaAtual + quantidade <= capacidade) {
             cargaAtual += quantidade;
+            System.out.println("Caminhão pequeno coletou " + quantidade + "kg. Carga atual: " + cargaAtual);
             return true;
         }
         return false;
