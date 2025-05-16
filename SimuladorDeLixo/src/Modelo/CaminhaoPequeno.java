@@ -16,9 +16,7 @@ public abstract  class CaminhaoPequeno {
   }
 
   public void registrarViagem() {
-
     viagensRealizadas++;
-   
   }
 
   public int descarregar() {

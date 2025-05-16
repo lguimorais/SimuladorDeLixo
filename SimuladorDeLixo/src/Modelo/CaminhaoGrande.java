@@ -13,14 +13,6 @@ public abstract class CaminhaoGrande {
   public void incrementarEspera() {
     tempoEspera++;
   }
-  
-  public boolean devePartir() {
-    // se está vazio, não parte
-    if (cargaAtual == 0)
-      return false;
-    // parte se cheio ou se tempo de espera passou da tolerância
-    return prontoParaPartir() || passouTolerancia();
-  }
 
   public boolean passouTolerancia() {
     return tempoEspera >= toleranciaEspera;
@@ -41,7 +33,7 @@ public abstract class CaminhaoGrande {
   public boolean estaEmUso() {
     return emUso;
   }
-  
+
   public boolean prontoParaPartir() {
     return cargaAtual >= capacidadeMaxima;
   }

@@ -9,10 +9,6 @@ public class CaminhaoGrandePadrao extends CaminhaoGrande {
         this.emUso = false;
      
     }
-    
-    public int getCargaAtual() {
-        return this.cargaAtual;
-    }
 
     @Override
     public void carregar(int quantidade) {

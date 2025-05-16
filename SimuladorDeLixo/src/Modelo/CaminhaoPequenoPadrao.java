@@ -1,11 +1,12 @@
 package Modelo;
 
-
 public class CaminhaoPequenoPadrao extends CaminhaoPequeno {
 
-    public CaminhaoPequenoPadrao() {
-        this.capacidade = 2000;
+    public CaminhaoPequenoPadrao(int capacidade, int maxViagensPorDia) {
+        this.capacidade = capacidade;
         this.cargaAtual = 0;
+        this.maxViagensPorDia = maxViagensPorDia;
+        this.viagensRealizadas = 0;
     }
 
     @Override
