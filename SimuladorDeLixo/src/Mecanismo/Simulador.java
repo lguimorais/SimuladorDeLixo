@@ -32,15 +32,15 @@ public class Simulador implements Serializable {
     System.out.println("Simulação iniciada...");
 
     // Gera 4 caminhões pequenos 2 toneladas
-    this.geraCaminhoesPequenos(4, 2, 4);
+    this.geraCaminhoesPequenos(10, 2, 4);
     // Gera 4 caminhões pequenos 4 toneladas
-    this.geraCaminhoesPequenos(4, 4, 4);
+    this.geraCaminhoesPequenos(10, 4, 4);
     // Gera 4 caminhões pequenos 8 toneladas
-    this.geraCaminhoesPequenos(4, 8, 4);
+    this.geraCaminhoesPequenos(10, 8, 4);
     // Gera 4 caminhões pequenos 10 toneladas
-    this.geraCaminhoesPequenos(4, 10, 4);
+    this.geraCaminhoesPequenos(10, 10, 4);
     // Gera 2 caminhões pequenos 2 toneladas
-    this.geraCaminhoesPequenos(2, 2, 4);
+    this.geraCaminhoesPequenos(10, 2, 4);
     // Gera 4 caminhões grandes 20 toneladas
     this.geraCaminhoesGrandes(10, 20, 5);
 
