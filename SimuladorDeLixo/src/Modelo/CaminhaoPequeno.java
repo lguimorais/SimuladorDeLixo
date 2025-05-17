@@ -6,6 +6,9 @@ public abstract  class CaminhaoPequeno {
   protected int viagensRealizadas;
 
   public abstract boolean coletar(int quantidade);
+  public int  getCapacidade(){
+  return capacidade;
+  }
 
   public boolean estaCheio() {
     return cargaAtual >= capacidade;

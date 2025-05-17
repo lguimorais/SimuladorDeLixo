@@ -26,39 +26,40 @@ public class Simulador implements Serializable {
   // Lista de caminhões pequenos padrão utilizados na simulação
   public Lista<CaminhaoGrandePadrao> lista_caminhoes_grandes = new Lista<CaminhaoGrandePadrao>();
   private Lista<Zona> listaZonas = new Lista<>();
+
   // Inicia a simulação
   public void iniciar() {
     System.out.println("Simulação iniciada...");
 
     // Gera 4 caminhões pequenos 2 toneladas
-    this.geraCaminhoesPequenos(4, 10,4);
-    // Gera 4 caminhões pequenos 2 toneladas
-    this.geraCaminhoesPequenos(4, 10,4);
-    // Gera 4 caminhões pequenos 2 toneladas
-    this.geraCaminhoesPequenos(4, 10,4);
-    // Gera 4 caminhões pequenos 2 toneladas
-    this.geraCaminhoesPequenos(4, 10,4);
+    this.geraCaminhoesPequenos(4, 2, 4);
+    // Gera 4 caminhões pequenos 4 toneladas
+    this.geraCaminhoesPequenos(4, 4, 4);
+    // Gera 4 caminhões pequenos 8 toneladas
+    this.geraCaminhoesPequenos(4, 8, 4);
+    // Gera 4 caminhões pequenos 10 toneladas
+    this.geraCaminhoesPequenos(4, 10, 4);
     // Gera 2 caminhões pequenos 2 toneladas
-    this.geraCaminhoesPequenos(2, 10,4);
+    this.geraCaminhoesPequenos(2, 2, 4);
     // Gera 4 caminhões grandes 20 toneladas
-    this.geraCaminhoesGrandes(10, 20,5);
+    this.geraCaminhoesGrandes(10, 20, 5);
 
     // gera as zona sul
-    Zona zonaSul = new Zona("Sul", 2, 10);
+    Zona zonaSul = new Zona("Sul", 20, 40);
     // gera as zonas norte
-    Zona zonaNorte = new Zona("norte", 2, 10);
+    Zona zonaNorte = new Zona("norte", 20, 40);
     // gera as zonas leste
-    Zona zonaLeste = new Zona("leste", 2, 10);
+    Zona zonaLeste = new Zona("leste", 20, 40);
     // gera as zonas oeste
-    Zona zonaSudeste = new Zona("sudeste", 2, 10);
+    Zona zonaSudeste = new Zona("sudeste", 20, 40);
     // gera as zonas do dirceu
-    Zona zonaCentro = new Zona("centro", 3, 10);
+    Zona zonaCentro = new Zona("centro", 30, 60);
     listaZonas.add(zonaSul);
     listaZonas.add(zonaNorte);
     listaZonas.add(zonaLeste);
     listaZonas.add(zonaSudeste);
     listaZonas.add(zonaCentro);
-    EstacaoPadrao estacao1= new EstacaoPadrao("dirceu", 0);
+    EstacaoPadrao estacao1 = new EstacaoPadrao("dirceu", 0);
     EstacaoPadrao estacao2 = new EstacaoPadrao("dirceu", 0);
     // Instancia e configura o timer para avançar o tempo a cada segundo (1000 ms)
     timer = new Timer();
@@ -131,31 +132,38 @@ public class Simulador implements Serializable {
     System.out.println("Tempo simulado: " + tempoSimulado + " minutos");
 
     for (int i = 0; i < listaZonas.getTamanho(); i++) {
-      Zona zona = listaZonas.getValor(i); // agora usando getValor()
+      Zona zona = listaZonas.getValor(i); // Usando método correto da Lista
+      double lixoRestante = zona.gerarLixo();
 
-      double lixoGerado = zona.gerarLixo();
-      boolean coletado = false;
+      System.out.println("[" + zona.getNome() + "] Lixo gerado: " + (int) lixoRestante + " kg");
 
       for (int j = 0; j < lista_caminhoes.getTamanho(); j++) {
-        CaminhaoPequenoPadrao caminhao = lista_caminhoes.getValor(j); // agora usando getValor()
+        if (lixoRestante <= 0)
+          break;
+
+        CaminhaoPequenoPadrao caminhao = lista_caminhoes.getValor(j);
 
         if (caminhao.estaDisponivel()) {
-          boolean sucesso = caminhao.coletar((int) lixoGerado);
-          if (sucesso) {
-            caminhao.registrarViagem(); // agora usando método da superclasse
-            System.out.println("[" + zona.getNome() + "] Caminhão coletou " + (int) lixoGerado + " kg. Carga atual: "
-                + caminhao.getCargaAtual());
-          } else {
-            System.out.println("[" + zona.getNome() + "] Caminhão NÃO pôde coletar " + (int) lixoGerado
-                + " kg. Carga atual: " + caminhao.getCargaAtual());
+          int capacidadeDisponivel = caminhao.getCapacidade() - caminhao.getCargaAtual();
+          int quantidadeParaColetar = (int) Math.min(lixoRestante, capacidadeDisponivel);
+
+          if (quantidadeParaColetar > 0) {
+            boolean sucesso = caminhao.coletar(quantidadeParaColetar);
+
+            if (sucesso) {
+              caminhao.registrarViagem();
+              lixoRestante -= quantidadeParaColetar;
+
+              System.out.println(" → Caminhão coletou " + quantidadeParaColetar +
+                  " kg. Carga atual: " + caminhao.getCargaAtual());
+            }
           }
-          coletado = true;
-          break; // um caminhão por zona por minuto
         }
       }
 
-      if (!coletado) {
-        System.out.println("[" + zona.getNome() + "] Nenhum caminhão disponível para coleta.");
+      if (lixoRestante > 0) {
+        System.out.println(" → Lixo remanescente na zona: " + (int) lixoRestante
+            + " kg (sem caminhões disponíveis ou com capacidade)");
       }
     }
 
