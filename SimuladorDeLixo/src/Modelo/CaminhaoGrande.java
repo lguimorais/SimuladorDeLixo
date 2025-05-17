@@ -47,6 +47,14 @@ public abstract class CaminhaoGrande {
     resetarEspera();
     liberar();
   }
+  
+  public int getCapacidadeMaxima() {
+    return capacidadeMaxima;
+  }
+
+  public int getCargaAtual() {
+    return cargaAtual;
+  }
 
 
 }

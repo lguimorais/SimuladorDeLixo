@@ -5,6 +5,7 @@ import Modelo.*;
 import java.io.*;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Collections;
 //nao utilizei a classe simulador disponibilizada pelo prefoessor mas esta aqui caso ele queira usa-la
 
 // Classe principal da simulação, que gerencia tempo, caminhões e persistência
@@ -26,24 +27,30 @@ public class Simulador implements Serializable {
   // Lista de caminhões pequenos padrão utilizados na simulação
   public Lista<CaminhaoGrandePadrao> lista_caminhoes_grandes = new Lista<CaminhaoGrandePadrao>();
   private Lista<Zona> listaZonas = new Lista<>();
+  private EstacaoPadrao estacao1;
+  private EstacaoPadrao estacao2;
+  private Fila<CaminhaoGrande> filaGrandes = new Fila<>();
 
   // Inicia a simulação
   public void iniciar() {
     System.out.println("Simulação iniciada...");
-
-    // Gera 4 caminhões pequenos 2 toneladas
-    this.geraCaminhoesPequenos(10, 2, 4);
-    // Gera 4 caminhões pequenos 4 toneladas
-    this.geraCaminhoesPequenos(10, 4, 4);
+    estacao1 = new EstacaoPadrao("Estação Norte", 0);
+    estacao2 = new EstacaoPadrao("Estação Sul", 0);
     // Gera 4 caminhões pequenos 8 toneladas
     this.geraCaminhoesPequenos(10, 8, 4);
+    // Gera 4 caminhões pequenos 4 toneladas
+    this.geraCaminhoesPequenos(10, 4, 4);
     // Gera 4 caminhões pequenos 10 toneladas
     this.geraCaminhoesPequenos(10, 10, 4);
+    // Gera 4 caminhões pequenos 2 toneladas
+    this.geraCaminhoesPequenos(10, 2, 4);
     // Gera 2 caminhões pequenos 2 toneladas
     this.geraCaminhoesPequenos(10, 2, 4);
     // Gera 4 caminhões grandes 20 toneladas
     this.geraCaminhoesGrandes(10, 20, 5);
-
+    for (int i = 0; i < lista_caminhoes_grandes.getTamanho(); i++) {
+      filaGrandes.add(lista_caminhoes_grandes.getValor(i));
+    }
     // gera as zona sul
     Zona zonaSul = new Zona("Sul", 20, 40);
     // gera as zonas norte
@@ -131,45 +138,83 @@ public class Simulador implements Serializable {
   private void atualizarSimulacao() {
     System.out.println("Tempo simulado: " + tempoSimulado + " minutos");
 
+    // 1. Geração e coleta de lixo
     for (int i = 0; i < listaZonas.getTamanho(); i++) {
-      Zona zona = listaZonas.getValor(i); // Usando método correto da Lista
-      double lixoRestante = zona.gerarLixo();
-
-      System.out.println("[" + zona.getNome() + "] Lixo gerado: " + (int) lixoRestante + " kg");
+      Zona zona = listaZonas.getValor(i);
+      double lixoGerado = zona.gerarLixo();
+      System.out.println("[" + zona.getNome() + "] Lixo gerado: " + (int) lixoGerado + " T");
 
       for (int j = 0; j < lista_caminhoes.getTamanho(); j++) {
-        if (lixoRestante <= 0)
-          break;
-
         CaminhaoPequenoPadrao caminhao = lista_caminhoes.getValor(j);
 
-        if (caminhao.estaDisponivel()) {
+        if (caminhao.estaDisponivel() && lixoGerado > 0) {
           int capacidadeDisponivel = caminhao.getCapacidade() - caminhao.getCargaAtual();
-          int quantidadeParaColetar = (int) Math.min(lixoRestante, capacidadeDisponivel);
+          int quantidadeColetar = (int) Math.min(lixoGerado, capacidadeDisponivel);
 
-          if (quantidadeParaColetar > 0) {
-            boolean sucesso = caminhao.coletar(quantidadeParaColetar);
+          if (quantidadeColetar > 0 && caminhao.coletar(quantidadeColetar)) {
+            lixoGerado -= quantidadeColetar;
+            caminhao.registrarViagem();
+            System.out.println(" → Caminhão " + j + " coletou " + quantidadeColetar +
+                " T. Carga: " + caminhao.getCargaAtual() + "/" + caminhao.getCapacidade());
 
-            if (sucesso) {
-              caminhao.registrarViagem();
-              lixoRestante -= quantidadeParaColetar;
-
-              System.out.println(" → Caminhão coletou " + quantidadeParaColetar +
-                  " kg. Carga atual: " + caminhao.getCargaAtual());
+            if (caminhao.estaCheio()) {
+              enviarParaEstacao(caminhao);
             }
           }
         }
       }
-
-      if (lixoRestante > 0) {
-        System.out.println(" → Lixo remanescente na zona: " + (int) lixoRestante
-            + " kg (sem caminhões disponíveis ou com capacidade)");
-      }
     }
 
+    // 2. Processar estações de transferência
+    processarEstacoes();
+
+    // 3. Atualizar caminhões grandes
+    atualizarCaminhoesGrandes();
+
     System.out.println("-----------------------------------------");
+  }
+
+  // 4. Adicionar estes novos métodos auxiliares
+  private void enviarParaEstacao(CaminhaoPequenoPadrao caminhao) {
+    // Lógica simplificada para escolher estação
+    EstacaoPadrao estacao = (Math.random() < 0.5) ? estacao1 : estacao2;
+    estacao.receberCaminhaoPequeno(caminhao);
+    System.out.println("Caminhão pequeno enviado para " + estacao.getNome());
+  }
+
+  private void processarEstacoes() {
+    processarEstacao(estacao1);
+    processarEstacao(estacao2);
+  }
+
+  private void processarEstacao(EstacaoPadrao estacao) {
+    // Converter caminhões pequenos para lista genérica
+    Lista<CaminhaoPequeno> caminhoesParaTransferir = new Lista<>();
+    Fila<CaminhaoPequenoPadrao> fila = estacao.getFilaCaminhoes();
+
+    while (!fila.estaVazia()) {
+      caminhoesParaTransferir.add(fila.remove());
+    }
+
+    // Processar transferência
+    estacao.transferirLixoParaCaminhoesGrandes(caminhoesParaTransferir, filaGrandes);
+  }
+
+  private void atualizarCaminhoesGrandes() {
+    for (int i = 0; i < lista_caminhoes_grandes.getTamanho(); i++) {
+      CaminhaoGrandePadrao caminhao = lista_caminhoes_grandes.getValor(i);
+      caminhao.incrementarEspera();
+
+      if (caminhao.passouTolerancia() && caminhao.getCargaAtual() > 0) {
+        System.out.println("Caminhão grande " + caminhao.hashCode() +
+            " excedeu tempo de espera! Partindo com " +
+            caminhao.getCargaAtual() + " T");
+        caminhao.descarregar(0);
+      }
+    }
     timer.cancel();
   }
+  
 }
 
 // Comentários adicionais deixados no código original:

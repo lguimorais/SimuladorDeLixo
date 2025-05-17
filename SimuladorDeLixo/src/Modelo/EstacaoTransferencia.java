@@ -1,5 +1,7 @@
 package Modelo;
 
+import EstruturasDeDados.Fila;
+
 public abstract class EstacaoTransferencia {
   protected String nome;
 
@@ -12,6 +14,6 @@ public abstract class EstacaoTransferencia {
   }
 
   public abstract void receberCaminhaoPequeno(CaminhaoPequeno caminhao);
-
+ public abstract Fila<CaminhaoPequenoPadrao> getFilaCaminhoes();
   public abstract void descarregarParaCaminhaoGrande(CaminhaoGrande caminhao);
 }

@@ -14,7 +14,7 @@ public class CaminhaoPequenoPadrao extends CaminhaoPequeno {
       
         if (cargaAtual + quantidade <= capacidade) {
             cargaAtual += quantidade;
-            System.out.println("Caminhão pequeno coletou " + quantidade + "kg. Carga atual: " + cargaAtual);
+            System.out.println("Caminhão pequeno coletou " + quantidade + "T. Carga atual: " + cargaAtual);
             return true;
         }
         return false;

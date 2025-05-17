@@ -67,6 +67,14 @@ public class Zona {
     }
   }
   
+  public void distribuirCaminhoesParaEstacao(Lista<CaminhaoPequenoPadrao> caminhoes) {
+    for (int i = 0; i < caminhoes.getTamanho(); i++) {
+      CaminhaoPequenoPadrao caminhao = caminhoes.getValor(i);
+      if (caminhao.estaCheio()) {
+        estacaoDestino.receberCaminhaoPequeno(caminhao);
+      }
+    }
+  }
 
   public String getNome() {
     return nome;
