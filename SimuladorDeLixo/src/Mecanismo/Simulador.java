@@ -1,10 +1,10 @@
 package Mecanismo;
 
+import EstruturasDeDados.*;
+import Modelo.*;
 import java.io.*;
 import java.util.Timer;
 import java.util.TimerTask;
-import Modelo.*;
-import EstruturasDeDados.*;
 //nao utilizei a classe simulador disponibilizada pelo prefoessor mas esta aqui caso ele queira usa-la
 
 // Classe principal da simulação, que gerencia tempo, caminhões e persistência
@@ -76,11 +76,11 @@ public class Simulador implements Serializable {
     }
   }
 
-  // Gera a quantidade especificada de caminhões pequenos e adiciona à lista
+  // Gera a quantidade especificada de caminhões grandes e adiciona à lista
   private void geraCaminhoesGrandes(int qtd, int capacidade, int toleranciaEspera) {
     for (int i = 0; i < qtd; i++) {
-      CaminhaoGrandePadrao novo_caminhao = new CaminhaoGrandePadrao(capacidade, toleranciaEspera);
-      this.lista_caminhoes_grandes.add(novo_caminhao);
+      CaminhaoGrandePadrao novo_caminhao_grande = new CaminhaoGrandePadrao(capacidade, toleranciaEspera);
+      this.lista_caminhoes_grandes.add(novo_caminhao_grande);
     }
   }
 
@@ -125,6 +125,7 @@ public class Simulador implements Serializable {
   private void atualizarSimulacao() {
     System.out.println("Tempo simulado: " + tempoSimulado + " minutos");
     this.lista_caminhoes.imprimir(); // Exibe os caminhões cadastrados
+    timer.cancel(); // tirar isso ao fina da codificaçao.
   }
 }
 
