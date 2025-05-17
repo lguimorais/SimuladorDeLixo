@@ -19,4 +19,8 @@ public class CaminhaoPequenoPadrao extends CaminhaoPequeno {
         }
         return false;
     }
+    
+    public boolean estaDisponivel() {
+        return this.viagensRealizadas < this.maxViagensPorDia && this.cargaAtual < this.capacidade;
+    }
 }

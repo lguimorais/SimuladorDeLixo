@@ -25,34 +25,39 @@ public class Simulador implements Serializable {
 
   // Lista de caminhões pequenos padrão utilizados na simulação
   public Lista<CaminhaoGrandePadrao> lista_caminhoes_grandes = new Lista<CaminhaoGrandePadrao>();
-
+  private Lista<Zona> listaZonas = new Lista<>();
   // Inicia a simulação
   public void iniciar() {
     System.out.println("Simulação iniciada...");
 
     // Gera 4 caminhões pequenos 2 toneladas
-    this.geraCaminhoesPequenos(4, 2,4);
+    this.geraCaminhoesPequenos(4, 10,4);
     // Gera 4 caminhões pequenos 2 toneladas
-    this.geraCaminhoesPequenos(4, 4,4);
+    this.geraCaminhoesPequenos(4, 10,4);
     // Gera 4 caminhões pequenos 2 toneladas
-    this.geraCaminhoesPequenos(4, 8,4);
+    this.geraCaminhoesPequenos(4, 10,4);
     // Gera 4 caminhões pequenos 2 toneladas
     this.geraCaminhoesPequenos(4, 10,4);
     // Gera 2 caminhões pequenos 2 toneladas
-    this.geraCaminhoesPequenos(2, 2,4);
+    this.geraCaminhoesPequenos(2, 10,4);
     // Gera 4 caminhões grandes 20 toneladas
     this.geraCaminhoesGrandes(10, 20,5);
 
     // gera as zona sul
-    Zona zonaSul = new Zona("Sul", 20, 40);
+    Zona zonaSul = new Zona("Sul", 2, 10);
     // gera as zonas norte
-    Zona zonaNorte = new Zona("norte", 20, 40);
+    Zona zonaNorte = new Zona("norte", 2, 10);
     // gera as zonas leste
-    Zona zonaLeste = new Zona("leste", 20, 40);
+    Zona zonaLeste = new Zona("leste", 2, 10);
     // gera as zonas oeste
-    Zona zonaOeste = new Zona("sudeste", 20, 40);
+    Zona zonaSudeste = new Zona("sudeste", 2, 10);
     // gera as zonas do dirceu
-    Zona zonaCentral = new Zona("centro", 30, 60);
+    Zona zonaCentro = new Zona("centro", 3, 10);
+    listaZonas.add(zonaSul);
+    listaZonas.add(zonaNorte);
+    listaZonas.add(zonaLeste);
+    listaZonas.add(zonaSudeste);
+    listaZonas.add(zonaCentro);
     EstacaoPadrao estacao1= new EstacaoPadrao("dirceu", 0);
     EstacaoPadrao estacao2 = new EstacaoPadrao("dirceu", 0);
     // Instancia e configura o timer para avançar o tempo a cada segundo (1000 ms)
@@ -124,8 +129,38 @@ public class Simulador implements Serializable {
   // Atualiza o estado da simulação a cada minuto simulado
   private void atualizarSimulacao() {
     System.out.println("Tempo simulado: " + tempoSimulado + " minutos");
-    this.lista_caminhoes.imprimir(); // Exibe os caminhões cadastrados
-    timer.cancel(); // tirar isso ao fina da codificaçao.
+
+    for (int i = 0; i < listaZonas.getTamanho(); i++) {
+      Zona zona = listaZonas.getValor(i); // agora usando getValor()
+
+      double lixoGerado = zona.gerarLixo();
+      boolean coletado = false;
+
+      for (int j = 0; j < lista_caminhoes.getTamanho(); j++) {
+        CaminhaoPequenoPadrao caminhao = lista_caminhoes.getValor(j); // agora usando getValor()
+
+        if (caminhao.estaDisponivel()) {
+          boolean sucesso = caminhao.coletar((int) lixoGerado);
+          if (sucesso) {
+            caminhao.registrarViagem(); // agora usando método da superclasse
+            System.out.println("[" + zona.getNome() + "] Caminhão coletou " + (int) lixoGerado + " kg. Carga atual: "
+                + caminhao.getCargaAtual());
+          } else {
+            System.out.println("[" + zona.getNome() + "] Caminhão NÃO pôde coletar " + (int) lixoGerado
+                + " kg. Carga atual: " + caminhao.getCargaAtual());
+          }
+          coletado = true;
+          break; // um caminhão por zona por minuto
+        }
+      }
+
+      if (!coletado) {
+        System.out.println("[" + zona.getNome() + "] Nenhum caminhão disponível para coleta.");
+      }
+    }
+
+    System.out.println("-----------------------------------------");
+    timer.cancel();
   }
 }
 

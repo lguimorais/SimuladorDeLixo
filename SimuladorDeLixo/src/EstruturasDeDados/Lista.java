@@ -35,6 +35,7 @@ public class Lista<T> {
   public int getTamanho() {
     return tamanho;
   }
+  
 
   public void setTamanho(int tamanho) {
     this.tamanho = tamanho;
@@ -156,5 +157,15 @@ public class Lista<T> {
     }
 
     return atual;
+  }
+  
+  public T getValor(int posicao) {
+    No<T> atual = this.head;
+    int i = 0;
+    while (atual != null && i < posicao) {
+      atual = atual.getProx();
+      i++;
+    }
+    return atual != null ? atual.getValor() : null;
   }
 }
