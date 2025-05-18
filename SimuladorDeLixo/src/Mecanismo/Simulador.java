@@ -137,7 +137,7 @@ public class Simulador implements Serializable {
   // Atualiza o estado da simulação a cada minuto simulado
   private void atualizarSimulacao() {
     System.out.println("Tempo simulado: " + tempoSimulado + " minutos");
-
+    System.out.println("______________________________________________________");
     // 1. Geração e coleta de lixo
     for (int i = 0; i < listaZonas.getTamanho(); i++) {
       Zona zona = listaZonas.getValor(i);
@@ -156,7 +156,7 @@ public class Simulador implements Serializable {
             caminhao.registrarViagem();
             System.out.println(" → Caminhão " + j + " coletou " + quantidadeColetar +
                 " T. Carga: " + caminhao.getCargaAtual() + "/" + caminhao.getCapacidade());
-
+            System.out.println("______________________________________________________");
             if (caminhao.estaCheio()) {
               enviarParaEstacao(caminhao);
             }
@@ -180,6 +180,7 @@ public class Simulador implements Serializable {
     EstacaoPadrao estacao = (Math.random() < 0.5) ? estacao1 : estacao2;
     estacao.receberCaminhaoPequeno(caminhao);
     System.out.println("Caminhão pequeno enviado para " + estacao.getNome());
+    System.out.println("______________________________________________________");
   }
 
   private void processarEstacoes() {
@@ -201,18 +202,21 @@ public class Simulador implements Serializable {
   }
 
   private void atualizarCaminhoesGrandes() {
+    System.out.println("______________________________________________________");
     for (int i = 0; i < lista_caminhoes_grandes.getTamanho(); i++) {
       CaminhaoGrandePadrao caminhao = lista_caminhoes_grandes.getValor(i);
       caminhao.incrementarEspera();
-
+    
       if (caminhao.passouTolerancia() && caminhao.getCargaAtual() > 0) {
+
         System.out.println("Caminhão grande " + caminhao.hashCode() +
             " excedeu tempo de espera! Partindo com " +
             caminhao.getCargaAtual() + " T");
         caminhao.descarregar(0);
       }
     }
-    timer.cancel();
+    
+
   }
   
 }
