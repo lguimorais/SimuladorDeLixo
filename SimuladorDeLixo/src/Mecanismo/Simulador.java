@@ -79,6 +79,13 @@ public class Simulador implements Serializable {
         }
       }
     }, 0, 1000);
+    long tempoLimite = 2 * 1000;
+    new Timer().schedule(new TimerTask() {
+      public void run() {
+        encerrar();
+        System.out.println("Encerramento automático após tempo definido.");
+      }
+    }, tempoLimite);
   }
 
   // Gera a quantidade especificada de caminhões pequenos e adiciona à lista
@@ -216,7 +223,7 @@ public class Simulador implements Serializable {
     atualizarCaminhoesGrandes();
 
     System.out.println("-----------------------------------------");
-    timer.cancel();
+  
   }
 
 }
