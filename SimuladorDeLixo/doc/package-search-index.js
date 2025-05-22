@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"EstruturasDeDados"},{"l":"Mecanismo"},{"l":"Modelo"},{"l":"Utilitarios"}];updateSearchResults();
