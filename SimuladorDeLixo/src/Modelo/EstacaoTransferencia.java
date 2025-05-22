@@ -14,6 +14,8 @@ public abstract class EstacaoTransferencia {
   }
 
   public abstract void receberCaminhaoPequeno(CaminhaoPequeno caminhao);
- public abstract Fila<CaminhaoPequenoPadrao> getFilaCaminhoes();
+
+  public abstract Fila<CaminhaoPequenoPadrao> getFilaCaminhoes();
+
   public abstract void descarregarParaCaminhaoGrande(CaminhaoGrande caminhao);
 }

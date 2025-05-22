@@ -69,12 +69,8 @@ public class Simulador implements Serializable {
     EstacaoPadrao estacao2 = new EstacaoPadrao("dirceu", 0);
     // Instancia e configura o timer para avançar o tempo a cada segundo (1000 ms)
 
-    // {
-    // public void run() {
-    // // Só avança o tempo se a simulação não estiver pausada
 
-    // }
-    // }
+    //  Só avança o tempo se a simulação não estiver pausada
     long tempoLimite = 100 * 1000;
     timer = new Timer();
     timer.scheduleAtFixedRate(new TimerTask() {
@@ -88,7 +84,7 @@ public class Simulador implements Serializable {
         System.out.println("=============== FIM DA SIMULAÇÃO AUTOMÁTICO ===============");
 
       }
-    }, 0, 1000);
+    }, 0, tempoLimite);
 
   }
 
@@ -188,16 +184,24 @@ public class Simulador implements Serializable {
 
   }
 
-  // Atualiza o estado da simulação a cada minuto simulado
+  /**
+   * Atualiza o estado da simulação a cada minuto simulado, realizando as
+   * seguintes operações:
+   * 1. Geração e coleta de lixo nas zonas urbanas
+   * 2. Processamento do lixo nas estações de transferência
+   * 3. Atualização do estado dos caminhões grandes que levam o lixo para os
+   * aterros
+   */
   private void atualizarSimulacao() {
     System.out.println("\n---------------- TEMPO SIMULADO: " + tempoSimulado + " min ----------------");
 
-    // 1. Geração e coleta de lixo
+    // 1. GERAÇÃO E COLETA DE LIXO NAS ZONAS URBANAS
     for (int i = 0; i < listaZonas.getTamanho(); i++) {
       Zona zona = listaZonas.getValor(i);
       double lixoGerado = zona.gerarLixo();
       System.out.printf(" > Zona %s: lixo gerado = %d T\n", zona.getNome(), (int) lixoGerado);
 
+      // Tenta coletar o lixo com os caminhões disponíveis
       for (int j = 0; j < lista_caminhoes.getTamanho(); j++) {
         CaminhaoPequenoPadrao caminhao = lista_caminhoes.getValor(j);
 
@@ -211,6 +215,8 @@ public class Simulador implements Serializable {
             System.out.printf("   - Caminhão %d coletou %d T (Carga atual: %d/%d T)\n",
                 j, quantidadeColetar, caminhao.getCargaAtual(), caminhao.getCapacidade());
             System.out.println("______________________________________________________");
+
+            // Se caminhão está cheio, envia para estação de transferência
             if (caminhao.estaCheio()) {
               enviarParaEstacao(caminhao);
             }
@@ -219,23 +225,13 @@ public class Simulador implements Serializable {
       }
     }
 
-    // 2. Processar estações de transferência
+    // 2. PROCESSAMENTO DAS ESTAÇÕES DE TRANSFERÊNCIA
     processarEstacoes();
 
-    // 3. Atualizar caminhões grandes
+    // 3. ATUALIZAÇÃO DOS CAMINHÕES GRANDES (PARA ATERROS)
     atualizarCaminhoesGrandes();
 
     System.out.println("-----------------------------------------");
-
   }
 
 }
-
-// Comentários adicionais deixados no código original:
-// - criar uma lista de zonas (Lista Dinamica)
-// - colocar os caminhoes
-// - timer
-// - lista de aterros
-// - aqui tera q assim q for criado os caminhoes tera q ser decidido a
-// quantidade
-// de viagens maxima pra nao precisar repetir isso varias vezes

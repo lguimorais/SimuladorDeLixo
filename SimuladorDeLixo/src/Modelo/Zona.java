@@ -1,7 +1,6 @@
 package Modelo;
 
 import EstruturasDeDados.Lista;
-import java.util.EnumMap;
 import java.util.Random;
 
 public class Zona {
@@ -13,7 +12,6 @@ public class Zona {
   private EstacaoPadrao estacaoDestino;
 
   // Quantidade de caminhões por período
-  private EnumMap<PeriodoDia, Integer> caminhoneirosPorPeriodo = new EnumMap<>(PeriodoDia.class);
 
   public Zona(String nome, double lixoMin, double lixoMax) {
     this.nome = nome;
@@ -21,9 +19,7 @@ public class Zona {
     this.lixoMax = lixoMax;
 
     // Inicializa com zero por padrão
-    for (PeriodoDia periodo : PeriodoDia.values()) {
-      caminhoneirosPorPeriodo.put(periodo, 0);
-    }
+
   }
   
   public void setEstacaoDestino(EstacaoPadrao estacao) {
@@ -41,31 +37,11 @@ public class Zona {
     return caminhoesPequenos;
   }
 
-  public void setCaminhoneirosPorPeriodo(PeriodoDia periodo, int quantidade) {
-    caminhoneirosPorPeriodo.put(periodo, quantidade);
-  }
-
-  public int getCaminhoneirosPorPeriodo(PeriodoDia periodo) {
-    return caminhoneirosPorPeriodo.getOrDefault(periodo, 0);
-  }
-
   // Retorna a quantidade de lixo gerada aleatoriamente dentro do intervalo
   public double gerarLixo() {
     return lixoMin + (lixoMax - lixoMin) * random.nextDouble();
   }
 
-  // Retorna quantos caminhões devem sair dada a hora do dia
-  public int caminhoneirosParaHora(int hora) {
-    if (hora >= 6 && hora < 10) {
-      return getCaminhoneirosPorPeriodo(PeriodoDia.MANHA);
-    } else if (hora >= 10 && hora < 15) {
-      return getCaminhoneirosPorPeriodo(PeriodoDia.PICO);
-    } else if (hora >= 15 && hora < 18) {
-      return getCaminhoneirosPorPeriodo(PeriodoDia.TARDE);
-    } else {
-      return 0; // Fora do horário operacional
-    }
-  }
   
   public void distribuirCaminhoesParaEstacao(Lista<CaminhaoPequenoPadrao> caminhoes) {
     for (int i = 0; i < caminhoes.getTamanho(); i++) {
