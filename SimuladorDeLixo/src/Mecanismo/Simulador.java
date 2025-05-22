@@ -80,11 +80,9 @@ public class Simulador implements Serializable {
           atualizarSimulacao();
 
         }
-        encerrar();
-        System.out.println("=============== FIM DA SIMULAÇÃO AUTOMÁTICO ===============");
 
       }
-    }, 0, tempoLimite);
+    }, 0, 1000);
 
   }
 
