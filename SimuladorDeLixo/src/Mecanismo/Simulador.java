@@ -5,7 +5,6 @@ import Modelo.*;
 import java.io.*;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.Collections;
 //nao utilizei a classe simulador disponibilizada pelo prefoessor mas esta aqui caso ele queira usa-la
 
 // Classe principal da simulação, que gerencia tempo, caminhões e persistência
@@ -33,7 +32,7 @@ public class Simulador implements Serializable {
 
   // Inicia a simulação
   public void iniciar() {
-    System.out.println("Simulação iniciada...");
+    System.out.println("\n================ INÍCIO DA SIMULAÇÃO ================");
     estacao1 = new EstacaoPadrao("Estação Norte", 0);
     estacao2 = new EstacaoPadrao("Estação Sul", 0);
     // Gera 4 caminhões pequenos 8 toneladas
@@ -69,23 +68,28 @@ public class Simulador implements Serializable {
     EstacaoPadrao estacao1 = new EstacaoPadrao("dirceu", 0);
     EstacaoPadrao estacao2 = new EstacaoPadrao("dirceu", 0);
     // Instancia e configura o timer para avançar o tempo a cada segundo (1000 ms)
+
+    // {
+    // public void run() {
+    // // Só avança o tempo se a simulação não estiver pausada
+
+    // }
+    // }
+    long tempoLimite = 100 * 1000;
     timer = new Timer();
     timer.scheduleAtFixedRate(new TimerTask() {
       public void run() {
-        // Só avança o tempo se a simulação não estiver pausada
         if (!pausado) {
           tempoSimulado++;
           atualizarSimulacao();
+
         }
+        encerrar();
+        System.out.println("=============== FIM DA SIMULAÇÃO AUTOMÁTICO ===============");
+
       }
     }, 0, 1000);
-    long tempoLimite = 2 * 1000;
-    new Timer().schedule(new TimerTask() {
-      public void run() {
-        encerrar();
-        System.out.println("Encerramento automático após tempo definido.");
-      }
-    }, tempoLimite);
+
   }
 
   // Gera a quantidade especificada de caminhões pequenos e adiciona à lista
@@ -169,16 +173,15 @@ public class Simulador implements Serializable {
   }
 
   private void atualizarCaminhoesGrandes() {
-    System.out.println("______________________________________________________");
+
     for (int i = 0; i < lista_caminhoes_grandes.getTamanho(); i++) {
       CaminhaoGrandePadrao caminhao = lista_caminhoes_grandes.getValor(i);
       caminhao.incrementarEspera();
 
       if (caminhao.passouTolerancia() && caminhao.getCargaAtual() > 0) {
 
-        System.out.println("Caminhão grande " + caminhao.hashCode() +
-            " excedeu tempo de espera! Partindo com " +
-            caminhao.getCargaAtual() + " T");
+        System.out.printf("⚠ Caminhão grande [%d] partiu por excesso de espera com %d T\n",
+            caminhao.hashCode(), caminhao.getCargaAtual());
         caminhao.descarregar(0);
       }
     }
@@ -187,13 +190,13 @@ public class Simulador implements Serializable {
 
   // Atualiza o estado da simulação a cada minuto simulado
   private void atualizarSimulacao() {
-    System.out.println("Tempo simulado: " + tempoSimulado + " minutos");
-    System.out.println("______________________________________________________");
+    System.out.println("\n---------------- TEMPO SIMULADO: " + tempoSimulado + " min ----------------");
+
     // 1. Geração e coleta de lixo
     for (int i = 0; i < listaZonas.getTamanho(); i++) {
       Zona zona = listaZonas.getValor(i);
       double lixoGerado = zona.gerarLixo();
-      System.out.println("[" + zona.getNome() + "] Lixo gerado: " + (int) lixoGerado + " T");
+      System.out.printf(" > Zona %s: lixo gerado = %d T\n", zona.getNome(), (int) lixoGerado);
 
       for (int j = 0; j < lista_caminhoes.getTamanho(); j++) {
         CaminhaoPequenoPadrao caminhao = lista_caminhoes.getValor(j);
@@ -205,8 +208,8 @@ public class Simulador implements Serializable {
           if (quantidadeColetar > 0 && caminhao.coletar(quantidadeColetar)) {
             lixoGerado -= quantidadeColetar;
             caminhao.registrarViagem();
-            System.out.println(" → Caminhão " + j + " coletou " + quantidadeColetar +
-                " T. Carga: " + caminhao.getCargaAtual() + "/" + caminhao.getCapacidade());
+            System.out.printf("   - Caminhão %d coletou %d T (Carga atual: %d/%d T)\n",
+                j, quantidadeColetar, caminhao.getCargaAtual(), caminhao.getCapacidade());
             System.out.println("______________________________________________________");
             if (caminhao.estaCheio()) {
               enviarParaEstacao(caminhao);
@@ -223,7 +226,7 @@ public class Simulador implements Serializable {
     atualizarCaminhoesGrandes();
 
     System.out.println("-----------------------------------------");
-  
+
   }
 
 }

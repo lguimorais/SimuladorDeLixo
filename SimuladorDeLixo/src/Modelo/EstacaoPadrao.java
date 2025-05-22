@@ -32,7 +32,7 @@ public class EstacaoPadrao extends EstacaoTransferencia {
             while (lixoRestante > 0) {
                 if (filaGrandes.estaVazia()) {
                     System.out.println("Nenhum caminhão grande disponível! Criando novo caminhão.");
-                    CaminhaoGrande novo = new CaminhaoGrandePadrao(20000, 5);
+                    CaminhaoGrande novo = new CaminhaoGrandePadrao(20000, 1);
                     filaGrandes.add(novo);
                 }
 

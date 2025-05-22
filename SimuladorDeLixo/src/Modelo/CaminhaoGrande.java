@@ -42,7 +42,7 @@ public abstract class CaminhaoGrande {
     if (cargaAtual == 0) {
 
     }
-    System.out.println("______________________________________________________");
+
     System.out.println("Caminhão grande partiu para o aterro com " + cargaAtual + "kg.");
     cargaAtual = 0;
     resetarEspera();
