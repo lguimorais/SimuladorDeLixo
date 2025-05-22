@@ -27,7 +27,7 @@ public class EstacaoPadrao extends EstacaoTransferencia {
                 continue;
 
             int lixoRestante = pequeno.descarregar();
-            System.out.println("Caminhão pequeno descarregou " + lixoRestante + "kg na estação " + nome);
+            System.out.println("Caminhão pequeno descarregou " + lixoRestante + "T na estação " + nome);
 
             while (lixoRestante > 0) {
                 if (filaGrandes.estaVazia()) {
@@ -42,7 +42,7 @@ public class EstacaoPadrao extends EstacaoTransferencia {
 
                 if (espacoDisponivel >= lixoRestante) {
                     grandeAtual.carregar(lixoRestante);
-                    System.out.println("Caminhão grande carregou " + lixoRestante + "kg.");
+                    System.out.println("Caminhão grande carregou " + lixoRestante + "T.");
                     lixoRestante = 0;
 
                     if (grandeAtual.prontoParaPartir()) {
@@ -53,7 +53,7 @@ public class EstacaoPadrao extends EstacaoTransferencia {
                 } else {
                     grandeAtual.carregar(espacoDisponivel);
                     lixoRestante -= espacoDisponivel;
-                    System.out.println("Caminhão grande carregou " + espacoDisponivel + "kg e partiu cheio.");
+                    System.out.println("Caminhão grande carregou " + espacoDisponivel + "T e partiu cheio.");
                     filaGrandes.remove(); // Remove usando seu método remove()
                     grandeAtual.descarregar(0);
                 }
@@ -71,7 +71,7 @@ public class EstacaoPadrao extends EstacaoTransferencia {
     @Override
     public void descarregarParaCaminhaoGrande(CaminhaoGrande caminhao) {
         caminhao.carregar(lixoArmazenado);
-        System.out.println("Estação " + nome + " carregou caminhão grande com " + lixoArmazenado + "kg.");
+        System.out.println("Estação " + nome + " carregou caminhão grande com " + lixoArmazenado + "T.");
         lixoArmazenado = 0;
     }
 }
