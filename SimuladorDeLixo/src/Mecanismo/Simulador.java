@@ -191,7 +191,7 @@ public class Simulador implements Serializable {
    * aterros
    */
   private void atualizarSimulacao() {
-    System.out.println("\n---------------- TEMPO SIMULADO: " + tempoSimulado + " min ----------------");
+    System.out.println("\n---------------- simulação em andamento----------------");
 
     // 1. GERAÇÃO E COLETA DE LIXO NAS ZONAS URBANAS
     for (int i = 0; i < listaZonas.getTamanho(); i++) {
