@@ -26,12 +26,12 @@ public class Simulador implements Serializable {
   // Lista de caminhões pequenos padrão utilizados na simulação
   public Lista<CaminhaoGrandePadrao> lista_caminhoes_grandes = new Lista<CaminhaoGrandePadrao>();
   private Lista<Zona> listaZonas = new Lista<>();
+  private Fila<CaminhaoGrande> filaGrandes = new Fila<>();
   private EstacaoPadrao estacao1;
   private EstacaoPadrao estacao2;
-  private Fila<CaminhaoGrande> filaGrandes = new Fila<>();
 
   // Inicia a simulação
-  public void iniciar() {
+  public void iniciar(int tempoLimiteMinutos) {
     System.out.println("\n================ INÍCIO DA SIMULAÇÃO ================");
     estacao1 = new EstacaoPadrao("Estação Norte", 0);
     estacao2 = new EstacaoPadrao("Estação Sul", 0);
@@ -65,13 +65,7 @@ public class Simulador implements Serializable {
     listaZonas.add(zonaLeste);
     listaZonas.add(zonaSudeste);
     listaZonas.add(zonaCentro);
-    EstacaoPadrao estacao1 = new EstacaoPadrao("dirceu", 0);
-    EstacaoPadrao estacao2 = new EstacaoPadrao("dirceu", 0);
-    // Instancia e configura o timer para avançar o tempo a cada segundo (1000 ms)
-
-
-    //  Só avança o tempo se a simulação não estiver pausada
-    long tempoLimite = 100 * 1000;
+    long tempoLimiteMilissegundos = tempoLimiteMinutos * 60L * 1000L;
     timer = new Timer();
     timer.scheduleAtFixedRate(new TimerTask() {
       public void run() {
@@ -79,10 +73,13 @@ public class Simulador implements Serializable {
           tempoSimulado++;
           atualizarSimulacao();
 
+          // Verifica se o tempo simulado atingiu o limite
+          if (tempoSimulado >= tempoLimiteMinutos) {
+            encerrar(); // encerra a simulação
+          }
         }
-
       }
-    }, 0, 1000);
+    }, 0, 1000); // executa a cada 1 segundo (1000 ms)
 
   }
 
@@ -114,11 +111,36 @@ public class Simulador implements Serializable {
     pausado = false;
   }
 
+  private void gerarRelatorioFinal() {
+    System.out.println("\n============= RELATÓRIO FINAL =============");
+
+    // Relatório por Zonas
+    System.out.println("\n▶ Zonas:");
+    for (int i = 0; i < listaZonas.getTamanho(); i++) {
+      Zona zona = listaZonas.getValor(i);
+      System.out.printf("- Zona %s - Gerado: %d kg | Coletado: %d kg\n",
+          zona.getNome(),
+          (int) zona.getTotalGerado(),
+          (int) zona.getTotalColetado());
+
+      // Relatório por Caminhões Pequenos
+      System.out.println("\n▶ Caminhões:");
+      for (int l = 0; l < lista_caminhoes.getTamanho(); l++) {
+        CaminhaoPequenoPadrao caminhao = lista_caminhoes.getValor(l);
+        System.out.printf("- Caminhão %s - Total coletado: %d kg | Viagens: %d\n",
+            caminhao.getNome(),
+            caminhao.getTotalColetado() * 1000, // se for em toneladas
+            caminhao.getViagensRealizadas());
+      }
+    }
+  }
+
   // Encerra a simulação e cancela o timer
   public void encerrar() {
     System.out.println("Simulação encerrada.");
     if (timer != null)
       timer.cancel();
+    gerarRelatorioFinal();
   }
 
   // Salva o estado atual da simulação em um arquivo
@@ -182,14 +204,6 @@ public class Simulador implements Serializable {
 
   }
 
-  /**
-   * Atualiza o estado da simulação a cada minuto simulado, realizando as
-   * seguintes operações:
-   * 1. Geração e coleta de lixo nas zonas urbanas
-   * 2. Processamento do lixo nas estações de transferência
-   * 3. Atualização do estado dos caminhões grandes que levam o lixo para os
-   * aterros
-   */
   private void atualizarSimulacao() {
     System.out.println("\n---------------- simulação em andamento----------------");
 
@@ -230,6 +244,7 @@ public class Simulador implements Serializable {
     atualizarCaminhoesGrandes();
 
     System.out.println("-----------------------------------------");
+
   }
 
 }

@@ -10,6 +10,8 @@ public class Zona {
   private Random random = new Random();
   private Lista<CaminhaoPequenoPadrao> caminhoesPequenos = new Lista<>();
   private EstacaoPadrao estacaoDestino;
+  private double totalGerado = 0;
+  private double totalColetado = 0;
 
   // Quantidade de caminhões por período
 
@@ -36,12 +38,17 @@ public class Zona {
   public Lista<CaminhaoPequenoPadrao> getCaminhoesPequenos() {
     return caminhoesPequenos;
   }
+  
+  public void registrarColeta(double quantidade) {
+    totalColetado += quantidade;
+  }
 
   // Retorna a quantidade de lixo gerada aleatoriamente dentro do intervalo
   public double gerarLixo() {
-    return lixoMin + (lixoMax - lixoMin) * random.nextDouble();
+    double gerado = lixoMin + (lixoMax - lixoMin) * random.nextDouble();
+    totalGerado += gerado;
+    return gerado;
   }
-
   
   public void distribuirCaminhoesParaEstacao(Lista<CaminhaoPequenoPadrao> caminhoes) {
     for (int i = 0; i < caminhoes.getTamanho(); i++) {
@@ -51,7 +58,15 @@ public class Zona {
       }
     }
   }
+  
+  public double getTotalGerado() {
+    return totalGerado;
+  }
 
+  public double getTotalColetado() {
+    return totalColetado;
+  }
+  
   public String getNome() {
     return nome;
   }

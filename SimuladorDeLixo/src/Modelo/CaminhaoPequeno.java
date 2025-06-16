@@ -4,6 +4,10 @@ public abstract  class CaminhaoPequeno {
   protected int cargaAtual;
   protected int maxViagensPorDia;
   protected int viagensRealizadas;
+  protected  int totalColetado ; // Total acumulado
+  protected  static int contador = 1;
+  protected  String nome;
+  
 
   public abstract boolean coletar(int quantidade);
   public int  getCapacidade(){
