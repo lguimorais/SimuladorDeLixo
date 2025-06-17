@@ -112,27 +112,31 @@ public class Simulador implements Serializable {
   }
 
   private void gerarRelatorioFinal() {
-    System.out.println("\n============= RELATÓRIO FINAL =============");
+    System.out.println("\n======= RELATÓRIO FINAL =======");
 
-    // Relatório por Zonas
-    System.out.println("\n▶ Zonas:");
+    // Agrega por zona
+    double totalGeradoZonas = 0, totalColetadoZonas = 0;
     for (int i = 0; i < listaZonas.getTamanho(); i++) {
-      Zona zona = listaZonas.getValor(i);
-      System.out.printf("- Zona %s - Gerado: %d kg | Coletado: %d kg\n",
-          zona.getNome(),
-          (int) zona.getTotalGerado(),
-          (int) zona.getTotalColetado());
-
-      // Relatório por Caminhões Pequenos
-      System.out.println("\n▶ Caminhões:");
-      for (int l = 0; l < lista_caminhoes.getTamanho(); l++) {
-        CaminhaoPequenoPadrao caminhao = lista_caminhoes.getValor(l);
-        System.out.printf("- Caminhão %s - Total coletado: %d kg | Viagens: %d\n",
-            caminhao.getNome(),
-            caminhao.getTotalColetado() * 1000, // se for em toneladas
-            caminhao.getViagensRealizadas());
-      }
+      Zona z = listaZonas.getValor(i);
+      totalGeradoZonas += z.getTotalGerado();
+      totalColetadoZonas += z.getTotalColetado();
     }
+    System.out.printf("• Zonas: geração total de %.0f T | coletados %.0f T%n",
+        totalGeradoZonas * 1000, totalColetadoZonas * 1000);
+
+    // Agrega por caminhões
+    int caminhaoCount = lista_caminhoes.getTamanho();
+    double totalColetadoCP = 0;
+    int totalViagensCP = 0;
+    for (int i = 0; i < caminhaoCount; i++) {
+      CaminhaoPequenoPadrao c = lista_caminhoes.getValor(i);
+      totalColetadoCP += c.getTotalColetado();
+      totalViagensCP += c.getViagensRealizadas();
+    }
+    System.out.printf("• %d caminhões coletaram um total de %.0f kg e fizeram %d viagens%n",
+        caminhaoCount, totalColetadoCP * 1000, totalViagensCP);
+
+    System.out.println("================================\n");
   }
 
   // Encerra a simulação e cancela o timer
@@ -223,6 +227,7 @@ public class Simulador implements Serializable {
 
           if (quantidadeColetar > 0 && caminhao.coletar(quantidadeColetar)) {
             lixoGerado -= quantidadeColetar;
+            zona.registrarColeta(quantidadeColetar);
             caminhao.registrarViagem();
             System.out.printf("   - Caminhão %d coletou %d T (Carga atual: %d/%d T)\n",
                 j, quantidadeColetar, caminhao.getCargaAtual(), caminhao.getCapacidade());
@@ -237,10 +242,8 @@ public class Simulador implements Serializable {
       }
     }
 
-    // 2. PROCESSAMENTO DAS ESTAÇÕES DE TRANSFERÊNCIA
     processarEstacoes();
 
-    // 3. ATUALIZAÇÃO DOS CAMINHÕES GRANDES (PARA ATERROS)
     atualizarCaminhoesGrandes();
 
     System.out.println("-----------------------------------------");
