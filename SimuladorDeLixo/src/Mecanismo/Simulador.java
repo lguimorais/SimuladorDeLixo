@@ -36,17 +36,17 @@ public class Simulador implements Serializable {
     estacao1 = new EstacaoPadrao("Estação Norte", 0);
     estacao2 = new EstacaoPadrao("Estação Sul", 0);
     // Gera 4 caminhões pequenos 8 toneladas
-    this.geraCaminhoesPequenos(10, 8, 4);
+    this.geraCaminhoesPequenos(15, 8, 4);
     // Gera 4 caminhões pequenos 4 toneladas
-    this.geraCaminhoesPequenos(10, 4, 4);
+    this.geraCaminhoesPequenos(15, 4, 4);
     // Gera 4 caminhões pequenos 10 toneladas
-    this.geraCaminhoesPequenos(10, 10, 4);
+    this.geraCaminhoesPequenos(15, 10, 4);
     // Gera 4 caminhões pequenos 2 toneladas
-    this.geraCaminhoesPequenos(10, 2, 4);
+    this.geraCaminhoesPequenos(15, 2, 4);
     // Gera 2 caminhões pequenos 2 toneladas
-    this.geraCaminhoesPequenos(10, 2, 4);
+    this.geraCaminhoesPequenos(15, 2, 4);
     // Gera 4 caminhões grandes 20 toneladas
-    this.geraCaminhoesGrandes(10, 20, 5);
+    this.geraCaminhoesGrandes(105, 20, 5);
     for (int i = 0; i < lista_caminhoes_grandes.getTamanho(); i++) {
       filaGrandes.add(lista_caminhoes_grandes.getValor(i));
     }
@@ -121,7 +121,7 @@ public class Simulador implements Serializable {
       totalGeradoZonas += z.getTotalGerado();
       totalColetadoZonas += z.getTotalColetado();
     }
-    System.out.printf("• Zonas: geração total de %.0f T | coletados %.0f T%n",
+    System.out.printf(" Zonas: geração total de %.0f KG | coletados %.0f KG%n",
         totalGeradoZonas * 1000, totalColetadoZonas * 1000);
 
     // Agrega por caminhões
@@ -133,7 +133,7 @@ public class Simulador implements Serializable {
       totalColetadoCP += c.getTotalColetado();
       totalViagensCP += c.getViagensRealizadas();
     }
-    System.out.printf("• %d caminhões coletaram um total de %.0f kg e fizeram %d viagens%n",
+    System.out.printf(" %d caminhões coletaram um total de %.0f KG e fizeram %d viagens%n",
         caminhaoCount, totalColetadoCP * 1000, totalViagensCP);
 
     System.out.println("================================\n");
